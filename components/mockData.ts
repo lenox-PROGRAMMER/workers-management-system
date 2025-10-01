@@ -1,132 +1,24 @@
-import { Worker } from "../App";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+import { Worker } from "../types";
 
-export const mockWorkers: Worker[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    role: "Emergency Response Coordinator",
-    department: "Emergency Response",
-    status: "active",
-    phone: "+1 (555) 123-4567",
-    email: "sarah.johnson@redcross.org",
-    joinDate: "2022-03-15",
-    certifications: ["First Aid", "CPR", "Emergency Response"],
-    availability: "Mon-Fri, On-call weekends",
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    role: "Paramedic",
-    department: "Medical Services",
-    status: "active",
-    phone: "+1 (555) 234-5678",
-    email: "michael.chen@redcross.org",
-    joinDate: "2021-07-22",
-    certifications: ["EMT-P", "Advanced Cardiac Life Support", "CPR"],
-    availability: "Rotating shifts",
-  },
-  {
-    id: "3",
-    name: "Emily Rodriguez",
-    role: "Disaster Relief Specialist",
-    department: "Disaster Relief",
-    status: "on-leave",
-    phone: "+1 (555) 345-6789",
-    email: "emily.rodriguez@redcross.org",
-    joinDate: "2020-11-08",
-    certifications: ["Disaster Management", "First Aid", "Search and Rescue"],
-    availability: "Full-time",
-  },
-  {
-    id: "4",
-    name: "James Wilson",
-    role: "Community Outreach Officer",
-    department: "Community Outreach",
-    status: "active",
-    phone: "+1 (555) 456-7890",
-    email: "james.wilson@redcross.org",
-    joinDate: "2023-01-10",
-    certifications: ["Community Health", "First Aid"],
-    availability: "Mon-Fri",
-  },
-  {
-    id: "5",
-    name: "Lisa Anderson",
-    role: "Blood Donation Coordinator",
-    department: "Blood Services",
-    status: "active",
-    phone: "+1 (555) 567-8901",
-    email: "lisa.anderson@redcross.org",
-    joinDate: "2019-05-20",
-    certifications: ["Phlebotomy", "Blood Bank Technology"],
-    availability: "Mon-Sat",
-  },
-  {
-    id: "6",
-    name: "David Martinez",
-    role: "First Aid Instructor",
-    department: "Medical Services",
-    status: "active",
-    phone: "+1 (555) 678-9012",
-    email: "david.martinez@redcross.org",
-    joinDate: "2021-09-15",
-    certifications: ["First Aid Instructor", "CPR Instructor", "AED Training"],
-    availability: "Flexible",
-  },
-  {
-    id: "7",
-    name: "Jessica Taylor",
-    role: "Emergency Operations Manager",
-    department: "Emergency Response",
-    status: "active",
-    phone: "+1 (555) 789-0123",
-    email: "jessica.taylor@redcross.org",
-    joinDate: "2018-02-28",
-    certifications: [
-      "Emergency Management",
-      "Incident Command System",
-      "First Aid",
-    ],
-    availability: "24/7 on-call",
-  },
-  {
-    id: "8",
-    name: "Robert Brown",
-    role: "Volunteer Coordinator",
-    department: "Administration",
-    status: "active",
-    phone: "+1 (555) 890-1234",
-    email: "robert.brown@redcross.org",
-    joinDate: "2022-06-12",
-    certifications: ["Volunteer Management", "First Aid"],
-    availability: "Mon-Fri",
-  },
-  {
-    id: "9",
-    name: "Amanda Lee",
-    role: "Mental Health Support Specialist",
-    department: "Community Outreach",
-    status: "inactive",
-    phone: "+1 (555) 901-2345",
-    email: "amanda.lee@redcross.org",
-    joinDate: "2020-04-05",
-    certifications: [
-      "Psychological First Aid",
-      "Crisis Counseling",
-      "Mental Health First Aid",
-    ],
-    availability: "Part-time",
-  },
-  {
-    id: "10",
-    name: "Christopher Garcia",
-    role: "Logistics Coordinator",
-    department: "Disaster Relief",
-    status: "active",
-    phone: "+1 (555) 012-3456",
-    email: "christopher.garcia@redcross.org",
-    joinDate: "2021-12-01",
-    certifications: ["Supply Chain Management", "Warehouse Operations"],
-    availability: "Mon-Fri",
-  },
-];
+export function useWorkers() {
+  const [workers, setWorkers] = useState<Worker[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      const { data, error } = await supabase.from("workers").select("*");
+      if (error) {
+        console.error("Error fetching workers:", error);
+      } else {
+        setWorkers(data);
+      }
+      setLoading(false);
+    };
+
+    fetchWorkers();
+  }, []);
+
+  return { workers, loading };
+}
